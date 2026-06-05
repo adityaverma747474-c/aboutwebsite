@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="8b0ebab71dac951b21ab7f4346bc34c7c22ca5fc" content="8b0ebab71dac951b21ab7f4346bc34c7c22ca5fc" />
+    <title>Doearno</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <script>
+      document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+      document.addEventListener('keydown', (e) => {
+        if (
+          e.key === 'F12' ||
+          (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+          (e.ctrlKey && e.shiftKey && e.key === 'J') ||
+          (e.ctrlKey && e.key === 'U') ||
+          (e.metaKey && e.altKey && e.key === 'I') || 
+          (e.metaKey && e.altKey && e.key === 'J') || 
+          (e.metaKey && e.key === 'U') 
+        ) {
+          e.preventDefault();
+        }
+      });
+    </script>
+  </body>
+</html>
