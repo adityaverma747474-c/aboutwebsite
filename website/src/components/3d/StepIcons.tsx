@@ -2,6 +2,9 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { Float, Sparkles } from "@react-three/drei";
 import { useRef, useMemo, useState, useEffect } from "react";
 import * as THREE from "three";
+import step2Animation from "@/assets/step2-animation.json";
+import step1Animation from "@/assets/step1-animation.json";
+import step3Animation from "@/assets/step3-animation.json";
 
 function UserIcon() {
   const g = useRef<THREE.Group>(null);
@@ -127,11 +130,180 @@ function StepScene({ children }: { children: React.ReactNode }) {
 }
 
 export function StepIcon1() {
-  return <StepScene><UserIcon /></StepScene>;
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let anim: any;
+    let isMounted = true;
+
+    const startLottie = (lottie: any) => {
+      if (!isMounted || !containerRef.current) return;
+      anim = lottie.loadAnimation({
+        container: containerRef.current,
+        renderer: "svg",
+        loop: true,
+        autoplay: true,
+        animationData: step1Animation,
+      });
+    };
+
+    const lottieScriptId = "lottie-cdn-script";
+    let script = document.getElementById(lottieScriptId) as HTMLScriptElement;
+
+    if ((window as any).lottie) {
+      startLottie((window as any).lottie);
+    } else {
+      if (!script) {
+        script = document.createElement("script");
+        script.id = lottieScriptId;
+        script.src = "https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js";
+        script.async = true;
+        document.body.appendChild(script);
+      }
+
+      const onLoad = () => {
+        if ((window as any).lottie) {
+          startLottie((window as any).lottie);
+        }
+      };
+
+      script.addEventListener("load", onLoad);
+      return () => {
+        script.removeEventListener("load", onLoad);
+        if (anim) anim.destroy();
+        isMounted = false;
+      };
+    }
+
+    return () => {
+      if (anim) anim.destroy();
+      isMounted = false;
+    };
+  }, []);
+
+  return (
+    <div 
+      ref={containerRef} 
+      className="w-full h-full flex items-center justify-center"
+    />
+  );
 }
 export function StepIcon2() {
-  return <StepScene><ClipboardIcon /></StepScene>;
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let anim: any;
+    let isMounted = true;
+
+    const startLottie = (lottie: any) => {
+      if (!isMounted || !containerRef.current) return;
+      anim = lottie.loadAnimation({
+        container: containerRef.current,
+        renderer: "svg",
+        loop: true,
+        autoplay: true,
+        animationData: step2Animation,
+      });
+    };
+
+    const lottieScriptId = "lottie-cdn-script";
+    let script = document.getElementById(lottieScriptId) as HTMLScriptElement;
+
+    if ((window as any).lottie) {
+      startLottie((window as any).lottie);
+    } else {
+      if (!script) {
+        script = document.createElement("script");
+        script.id = lottieScriptId;
+        script.src = "https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js";
+        script.async = true;
+        document.body.appendChild(script);
+      }
+
+      const onLoad = () => {
+        if ((window as any).lottie) {
+          startLottie((window as any).lottie);
+        }
+      };
+
+      script.addEventListener("load", onLoad);
+      return () => {
+        script.removeEventListener("load", onLoad);
+        if (anim) anim.destroy();
+        isMounted = false;
+      };
+    }
+
+    return () => {
+      if (anim) anim.destroy();
+      isMounted = false;
+    };
+  }, []);
+
+  return (
+    <div 
+      ref={containerRef} 
+      className="w-full h-full flex items-center justify-center"
+    />
+  );
 }
 export function StepIcon3() {
-  return <StepScene><WalletIcon /></StepScene>;
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let anim: any;
+    let isMounted = true;
+
+    const startLottie = (lottie: any) => {
+      if (!isMounted || !containerRef.current) return;
+      anim = lottie.loadAnimation({
+        container: containerRef.current,
+        renderer: "svg",
+        loop: true,
+        autoplay: true,
+        animationData: step3Animation,
+      });
+    };
+
+    const lottieScriptId = "lottie-cdn-script";
+    let script = document.getElementById(lottieScriptId) as HTMLScriptElement;
+
+    if ((window as any).lottie) {
+      startLottie((window as any).lottie);
+    } else {
+      if (!script) {
+        script = document.createElement("script");
+        script.id = lottieScriptId;
+        script.src = "https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js";
+        script.async = true;
+        document.body.appendChild(script);
+      }
+
+      const onLoad = () => {
+        if ((window as any).lottie) {
+          startLottie((window as any).lottie);
+        }
+      };
+
+      script.addEventListener("load", onLoad);
+      return () => {
+        script.removeEventListener("load", onLoad);
+        if (anim) anim.destroy();
+        isMounted = false;
+      };
+    }
+
+    return () => {
+      if (anim) anim.destroy();
+      isMounted = false;
+    };
+  }, []);
+
+  return (
+    <div 
+      ref={containerRef} 
+      className="w-full h-full flex items-center justify-center"
+      style={{ transform: "scale(1.95)", transformOrigin: "center" }}
+    />
+  );
 }

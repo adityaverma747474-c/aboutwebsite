@@ -203,8 +203,8 @@ function HowItWorks() {
             </h2>
             <p className="mt-6 text-muted-foreground max-w-xl">First payout the same day. The whole flow:</p>
           </div>
-          <div className="w-48 h-56 flex-shrink-0 hidden lg:block">
-            <LazySection height="224px">
+          <div className="w-80 h-80 flex-shrink-0 hidden lg:block">
+            <LazySection height="320px">
               <Suspense fallback={<LoaderPlaceholder />}>
                 <MascotScene />
               </Suspense>
@@ -261,8 +261,8 @@ function Ladder() {
           {tiers.map(([s, t, p2, d], i) => (
             <div key={t} className={`relative rounded-3xl p-8 card-3d glass ${i === 1 ? "bg-primary-soft/30 border-primary glow-pulse" : "border-border/10"}`}>
               {i === 0 && (
-                <div className="w-full h-40 mb-4">
-                  <LazySection height="160px">
+                <div className="w-full h-64 mb-4">
+                  <LazySection height="256px">
                     <Suspense fallback={<LoaderPlaceholder />}>
                       <SpinningCoin />
                     </Suspense>
@@ -270,8 +270,8 @@ function Ladder() {
                 </div>
               )}
               {i === 2 && (
-                <div className="w-full h-40 mb-4">
-                  <LazySection height="160px">
+                <div className="w-full h-64 mb-4">
+                  <LazySection height="256px">
                     <Suspense fallback={<LoaderPlaceholder />}>
                       <BlueprintScene progress={progress} />
                     </Suspense>
@@ -390,11 +390,11 @@ function Stories() {
       <div className="mx-auto max-w-7xl px-6 text-center relative z-10">
         <p className="eyebrow text-primary">· Real users · Real earnings ·</p>
         <h2 className="display mt-4 text-5xl md:text-6xl max-w-3xl mx-auto">
-          Hum abhi <em className="text-primary">journey start</em> kar rahe hain.
+          We are just <em className="text-primary">starting our journey</em>.
         </h2>
         <p className="mt-6 max-w-xl mx-auto text-muted-foreground leading-relaxed">
-          Stories aur feedback bahut jaldi yahan add karenge. Tab tak, aap khud
-          shuru kijiye — pehle cohort ka hissa baniye.
+          We will be adding stories and feedback here very soon. In the meantime, get started
+          yourself — be a part of our first cohort.
         </p>
         <div className="mt-10 inline-flex items-center gap-3 rounded-full border border-primary/30 glass px-6 py-3">
           <span className="h-2 w-2 rounded-full bg-primary animate-pulse" />
