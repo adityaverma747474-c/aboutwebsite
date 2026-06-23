@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/delete-account")({
@@ -7,6 +7,11 @@ export const Route = createFileRoute("/delete-account")({
 });
 
 export default function DeleteAccount() {
+  const nameRef = useRef<HTMLInputElement>(null);
+  const phoneRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const commentsRef = useRef<HTMLTextAreaElement>(null);
+
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -15,6 +20,40 @@ export default function DeleteAccount() {
     additionalComments: "",
     confirmLoss: false,
   });
+
+  // Fix: Override Flutter WebView's JS injection that blocks user-select on inputs
+  useEffect(() => {
+    const style = document.createElement("style");
+    style.id = "delete-form-fix";
+    style.innerHTML = `
+      input, textarea, select {
+        -webkit-user-select: text !important;
+        -moz-user-select: text !important;
+        -ms-user-select: text !important;
+        user-select: text !important;
+        touch-action: manipulation !important;
+        pointer-events: auto !important;
+        -webkit-tap-highlight-color: rgba(0,0,0,0.05) !important;
+      }
+    `;
+    document.head.appendChild(style);
+
+    // Also re-attach selectstart listeners to allow selection in inputs
+    const allowSelectInInputs = (e: Event) => {
+      const target = e.target as HTMLElement;
+      const tag = target.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") {
+        e.stopImmediatePropagation();
+      }
+    };
+    document.addEventListener("selectstart", allowSelectInInputs, true);
+
+    return () => {
+      document.head.removeChild(style);
+      document.removeEventListener("selectstart", allowSelectInInputs, true);
+    };
+  }, []);
+
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -134,43 +173,55 @@ export default function DeleteAccount() {
             <form onSubmit={handleSubmit}>
               {/* Name */}
               <div style={{ marginBottom: 18 }}>
-                <label htmlFor="name" style={{ display: "block", fontSize: 13, fontWeight: 500, color: "var(--muted-foreground)", marginBottom: 6 }}>Full Name *</label>
+                <label htmlFor="del-name" style={{ display: "block", fontSize: 13, fontWeight: 500, color: "var(--muted-foreground)", marginBottom: 6 }}>Full Name *</label>
                 <input
+                  ref={nameRef}
                   type="text"
-                  id="name"
+                  id="del-name"
                   name="name"
                   required
+                  autoComplete="name"
+                  inputMode="text"
                   value={formData.name}
                   onChange={handleChange}
+                  onInput={(e) => setFormData(p => ({ ...p, name: (e.target as HTMLInputElement).value }))}
                   placeholder="Enter your registered name"
-                  style={{ width: "100%", padding: "10px 14px", borderRadius: 10, border: "1px solid var(--border)", backgroundColor: "var(--background)", color: "var(--foreground)", fontSize: 14, outline: "none", boxSizing: "border-box" }}
+                  style={{ width: "100%", padding: "10px 14px", borderRadius: 10, border: "1px solid var(--border)", backgroundColor: "var(--background)", color: "var(--foreground)", fontSize: 16, outline: "none", boxSizing: "border-box", WebkitUserSelect: "text", userSelect: "text" }}
                 />
               </div>
 
               {/* Phone + Email */}
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 18 }}>
                 <div>
-                  <label htmlFor="phone" style={{ display: "block", fontSize: 13, fontWeight: 500, color: "var(--muted-foreground)", marginBottom: 6 }}>Registered Phone</label>
+                  <label htmlFor="del-phone" style={{ display: "block", fontSize: 13, fontWeight: 500, color: "var(--muted-foreground)", marginBottom: 6 }}>Registered Phone</label>
                   <input
+                    ref={phoneRef}
                     type="tel"
-                    id="phone"
+                    id="del-phone"
                     name="phone"
+                    autoComplete="tel"
+                    inputMode="tel"
                     value={formData.phone}
                     onChange={handleChange}
+                    onInput={(e) => setFormData(p => ({ ...p, phone: (e.target as HTMLInputElement).value }))}
                     placeholder="+91 9876543210"
-                    style={{ width: "100%", padding: "10px 14px", borderRadius: 10, border: "1px solid var(--border)", backgroundColor: "var(--background)", color: "var(--foreground)", fontSize: 14, outline: "none", boxSizing: "border-box" }}
+                    style={{ width: "100%", padding: "10px 14px", borderRadius: 10, border: "1px solid var(--border)", backgroundColor: "var(--background)", color: "var(--foreground)", fontSize: 16, outline: "none", boxSizing: "border-box", WebkitUserSelect: "text", userSelect: "text" }}
                   />
                 </div>
                 <div>
-                  <label htmlFor="email" style={{ display: "block", fontSize: 13, fontWeight: 500, color: "var(--muted-foreground)", marginBottom: 6 }}>Registered Email</label>
+                  <label htmlFor="del-email" style={{ display: "block", fontSize: 13, fontWeight: 500, color: "var(--muted-foreground)", marginBottom: 6 }}>Registered Email</label>
                   <input
+                    ref={emailRef}
                     type="email"
-                    id="email"
+                    id="del-email"
                     name="email"
+                    autoComplete="email"
+                    inputMode="email"
                     value={formData.email}
                     onChange={handleChange}
+                    onInput={(e) => setFormData(p => ({ ...p, email: (e.target as HTMLInputElement).value }))}
                     placeholder="name@example.com"
-                    style={{ width: "100%", padding: "10px 14px", borderRadius: 10, border: "1px solid var(--border)", backgroundColor: "var(--background)", color: "var(--foreground)", fontSize: 14, outline: "none", boxSizing: "border-box" }}
+                    style={{ width: "100%", padding: "10px 14px", borderRadius: 10, border: "1px solid var(--border)", backgroundColor: "var(--background)", color: "var(--foreground)", fontSize: 16, outline: "none", boxSizing: "border-box", WebkitUserSelect: "text", userSelect: "text" }}
                   />
                 </div>
               </div>
@@ -198,15 +249,17 @@ export default function DeleteAccount() {
 
               {/* Additional Comments */}
               <div style={{ marginBottom: 18 }}>
-                <label htmlFor="additionalComments" style={{ display: "block", fontSize: 13, fontWeight: 500, color: "var(--muted-foreground)", marginBottom: 6 }}>Additional Comments (Optional)</label>
+                <label htmlFor="del-comments" style={{ display: "block", fontSize: 13, fontWeight: 500, color: "var(--muted-foreground)", marginBottom: 6 }}>Additional Comments (Optional)</label>
                 <textarea
-                  id="additionalComments"
+                  ref={commentsRef}
+                  id="del-comments"
                   name="additionalComments"
                   rows={3}
                   value={formData.additionalComments}
                   onChange={handleChange}
+                  onInput={(e) => setFormData(p => ({ ...p, additionalComments: (e.target as HTMLTextAreaElement).value }))}
                   placeholder="Tell us how we can improve..."
-                  style={{ width: "100%", padding: "10px 14px", borderRadius: 10, border: "1px solid var(--border)", backgroundColor: "var(--background)", color: "var(--foreground)", fontSize: 14, outline: "none", resize: "none", boxSizing: "border-box", fontFamily: "inherit" }}
+                  style={{ width: "100%", padding: "10px 14px", borderRadius: 10, border: "1px solid var(--border)", backgroundColor: "var(--background)", color: "var(--foreground)", fontSize: 16, outline: "none", resize: "none", boxSizing: "border-box", fontFamily: "inherit", WebkitUserSelect: "text", userSelect: "text" }}
                 />
               </div>
 
