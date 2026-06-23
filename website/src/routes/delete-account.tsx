@@ -135,7 +135,7 @@ export default function DeleteAccount() {
           </div>
 
           {!isSubmitted ? (
-            <div className="glass rounded-3xl p-8 md:p-10 gradient-border card-3d">
+            <div className="bg-card border border-border rounded-3xl p-8 md:p-10 shadow-lg relative">
               <div className="flex items-start gap-4 mb-6">
                 <div className="grid h-12 w-12 place-items-center rounded-2xl bg-destructive/10 text-destructive border border-destructive/20 shrink-0">
                   <ShieldAlert className="h-6 w-6" />
@@ -168,7 +168,7 @@ export default function DeleteAccount() {
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="Enter your registered name"
-                    className="w-full px-4 py-3 rounded-xl bg-background/20 backdrop-blur-sm border border-border/20 focus:outline-none focus:border-primary text-foreground transition-all"
+                    className="w-full px-4 py-3 rounded-xl bg-background border border-border/60 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-foreground transition-all"
                   />
                 </div>
 
@@ -184,7 +184,7 @@ export default function DeleteAccount() {
                       value={formData.phone}
                       onChange={handleChange}
                       placeholder="e.g. +91 9876543210"
-                      className="w-full px-4 py-3 rounded-xl bg-background/20 backdrop-blur-sm border border-border/20 focus:outline-none focus:border-primary text-foreground transition-all"
+                      className="w-full px-4 py-3 rounded-xl bg-background border border-border/60 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-foreground transition-all"
                     />
                   </div>
                   <div>
@@ -198,7 +198,7 @@ export default function DeleteAccount() {
                       value={formData.email}
                       onChange={handleChange}
                       placeholder="e.g. name@example.com"
-                      className="w-full px-4 py-3 rounded-xl bg-background/20 backdrop-blur-sm border border-border/20 focus:outline-none focus:border-primary text-foreground transition-all"
+                      className="w-full px-4 py-3 rounded-xl bg-background border border-border/60 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-foreground transition-all"
                     />
                   </div>
                 </div>
@@ -213,7 +213,7 @@ export default function DeleteAccount() {
                     required
                     value={formData.reason}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-xl bg-background/25 border border-border/20 focus:outline-none focus:border-primary text-foreground transition-all"
+                    className="w-full px-4 py-3 rounded-xl bg-background border border-border/60 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-foreground transition-all"
                   >
                     <option value="" disabled className="bg-background text-foreground">Select a reason</option>
                     <option value="No longer using the app" className="bg-background text-foreground">No longer using the app</option>
@@ -236,7 +236,7 @@ export default function DeleteAccount() {
                     value={formData.additionalComments}
                     onChange={handleChange}
                     placeholder="Tell us how we can improve..."
-                    className="w-full px-4 py-3 rounded-xl bg-background/20 backdrop-blur-sm border border-border/20 focus:outline-none focus:border-primary text-foreground transition-all resize-none"
+                    className="w-full px-4 py-3 rounded-xl bg-background border border-border/60 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-foreground transition-all resize-none"
                   />
                 </div>
 
@@ -271,7 +271,7 @@ export default function DeleteAccount() {
               </form>
             </div>
           ) : (
-            <div className="glass rounded-3xl p-10 gradient-border text-center card-3d">
+            <div className="bg-card border border-border rounded-3xl p-10 shadow-lg text-center relative">
               <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary border border-primary/20 animate-bounce">
                 <CheckCircle2 className="h-8 w-8" />
               </div>
