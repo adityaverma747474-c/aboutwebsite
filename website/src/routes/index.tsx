@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useRef, useEffect, useState, useCallback, lazy, Suspense } from "react";
 import heroPhone from "@/assets/hero-phone.png";
 import coverSurveys from "@/assets/cover-surveys.jpg";
@@ -461,8 +461,8 @@ function FinalCta() {
           <a href="https://official.doearno.in" onClick={(e) => { const r = (e.target as HTMLElement).getBoundingClientRect(); triggerConfetti(r.left + r.width/2, r.top); triggerCoinRain(); }} className="btn-3d rounded-full bg-foreground text-background px-7 py-4 font-semibold hover:bg-background hover:text-foreground transition-colors">
             Start Earning Now 🚀
           </a>
-          <a href="mailto:doearno@gmail.com" className="rounded-full border border-foreground/30 px-7 py-4 font-semibold hover:bg-foreground/10 transition-colors">
-            doearno@gmail.com
+          <a href="mailto:business@doearno.in" className="rounded-full border border-foreground/30 px-7 py-4 font-semibold hover:bg-foreground/10 transition-colors">
+            business@doearno.in
           </a>
         </div>
       </div>
@@ -473,15 +473,22 @@ function FinalCta() {
 function Footer() {
   return (
     <footer className="bg-background/40 backdrop-blur-md border-t border-border/10 py-12 relative z-10">
-      <div className="mx-auto max-w-7xl px-6 flex flex-wrap items-center justify-between gap-6">
+      <div className="mx-auto max-w-7xl px-6 flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="flex items-center gap-2.5">
           <span className="grid h-9 w-9 place-items-center rounded-xl overflow-hidden border border-primary/30">
             <img src="https://i.ibb.co/bMmCYpfm/logo.jpg" alt="Doearno Logo" className="w-full h-full object-cover" />
           </span>
           <span className="font-serif text-2xl">Doearno</span>
         </div>
-        <p className="eyebrow text-muted-foreground">LEARN · DO · GROW · UPI PAYOUTS · MADE IN INDIA</p>
-        <p className="text-sm text-muted-foreground">© 2026 Doearno · doearno@gmail.com</p>
+        <div className="flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm">
+          <Link to="/delete-account" className="text-muted-foreground hover:text-primary transition-colors">
+            Delete Account Request
+          </Link>
+          <a href="mailto:business@doearno.in" className="text-muted-foreground hover:text-primary transition-colors">
+            Contact
+          </a>
+        </div>
+        <p className="text-sm text-muted-foreground">© 2026 Doearno · business@doearno.in</p>
       </div>
     </footer>
   );
