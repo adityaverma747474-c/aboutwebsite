@@ -1,52 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
-import { ArrowLeft, CheckCircle2, Mail, ShieldAlert, AlertTriangle } from "lucide-react";
 
 export const Route = createFileRoute("/delete-account")({
   component: DeleteAccount,
 });
-
-function Header() {
-  return (
-    <header className="sticky top-0 z-50 glass border-b border-border/10">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-        <Link to="/" className="flex items-center gap-2.5">
-          <span className="grid h-9 w-9 place-items-center rounded-xl overflow-hidden border border-primary/30">
-            <img src="https://i.ibb.co/bMmCYpfm/logo.jpg" alt="Doearno Logo" className="w-full h-full object-cover" />
-          </span>
-          <span className="font-serif text-2xl tracking-tight">Doearno</span>
-        </Link>
-        <nav className="hidden md:flex items-center gap-8 text-sm">
-          <Link to="/" hash="earn" className="text-muted-foreground hover:text-primary transition-colors">Earn</Link>
-          <Link to="/" hash="how" className="text-muted-foreground hover:text-primary transition-colors">How it works</Link>
-          <Link to="/" hash="tribes" className="text-muted-foreground hover:text-primary transition-colors">Tribes</Link>
-          <Link to="/" hash="stories" className="text-muted-foreground hover:text-primary transition-colors">Stories</Link>
-        </nav>
-        <a href="https://official.doearno.in" className="btn-3d rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary-deep transition-colors">
-          Start Earning →
-        </a>
-      </div>
-    </header>
-  );
-}
-
-function Footer() {
-  return (
-    <footer className="bg-background/40 backdrop-blur-md border-t border-border/10 py-12 relative z-10">
-      <div className="mx-auto max-w-7xl px-6 flex flex-wrap items-center justify-between gap-6">
-        <Link to="/" className="flex items-center gap-2.5">
-          <span className="grid h-9 w-9 place-items-center rounded-xl overflow-hidden border border-primary/30">
-            <img src="https://i.ibb.co/bMmCYpfm/logo.jpg" alt="Doearno Logo" className="w-full h-full object-cover" />
-          </span>
-          <span className="font-serif text-2xl">Doearno</span>
-        </Link>
-        <p className="eyebrow text-muted-foreground">LEARN · DO · GROW · UPI PAYOUTS · MADE IN INDIA</p>
-        <p className="text-sm text-muted-foreground">© 2026 Doearno · business@doearno.in</p>
-      </div>
-    </footer>
-  );
-}
 
 export default function DeleteAccount() {
   const [formData, setFormData] = useState({
@@ -61,7 +19,9 @@ export default function DeleteAccount() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
     const { name, value, type } = e.target;
     if (type === "checkbox") {
       const checked = (e.target as HTMLInputElement).checked;
@@ -79,7 +39,7 @@ export default function DeleteAccount() {
       return;
     }
     if (!formData.phone.trim() && !formData.email.trim()) {
-      toast.error("Please enter either your registered Phone Number or Email");
+      toast.error("Please enter your registered Phone Number or Email");
       return;
     }
     if (!formData.reason) {
@@ -87,234 +47,266 @@ export default function DeleteAccount() {
       return;
     }
     if (!formData.confirmLoss) {
-      toast.error("You must agree to the permanent loss of rewards to proceed");
+      toast.error("Please confirm you understand the permanent data loss");
       return;
     }
 
     setIsSubmitting(true);
 
-    // Simulate premium loading state
     setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-      toast.success("Request generated! Opening your email client to send.");
-
-      // Construct mailto link
       const emailTo = "business@doearno.in";
       const subject = encodeURIComponent("Doearno - Account Deletion Request");
       const body = encodeURIComponent(
         `Dear Doearno Support Team,\n\n` +
-        `I am writing to request the permanent deletion of my Doearno account. Below are my registered details:\n\n` +
-        `- Full Name: ${formData.name}\n` +
-        `- Phone Number: ${formData.phone || "Not provided"}\n` +
-        `- Email Address: ${formData.email || "Not provided"}\n` +
-        `- Reason for Deletion: ${formData.reason}\n` +
-        `- Additional Feedback: ${formData.additionalComments || "None"}\n\n` +
-        `I confirm that I understand that this action is permanent. All my accumulated coins, points, referral history, and pending withdrawals will be permanently erased and cannot be recovered.\n\n` +
-        `Please process this request within the standard 7 working days.\n\n` +
-        `Best regards,\n` +
-        `${formData.name}`
+        `I am writing to request permanent deletion of my Doearno account.\n\n` +
+        `Full Name: ${formData.name}\n` +
+        `Phone Number: ${formData.phone || "Not provided"}\n` +
+        `Email Address: ${formData.email || "Not provided"}\n` +
+        `Reason: ${formData.reason}\n` +
+        `Additional Comments: ${formData.additionalComments || "None"}\n\n` +
+        `I understand this action is permanent and all my data, coins, and referral history will be erased.\n\n` +
+        `Please process this request within 7 working days.\n\n` +
+        `Regards,\n${formData.name}`
       );
 
       window.location.href = `mailto:${emailTo}?subject=${subject}&body=${body}`;
-    }, 1500);
+      setIsSubmitting(false);
+      setIsSubmitted(true);
+      toast.success("Email client opened. Please send the email to complete your request.");
+    }, 800);
   };
 
   return (
-    <div className="min-h-screen bg-background selection:bg-primary/30 flex flex-col justify-between">
-      <div>
-        <Header />
-        
-        <main className="mx-auto max-w-2xl px-6 py-16 relative z-10">
-          <div className="absolute inset-0 -z-10 rounded-full bg-primary/10 blur-3xl max-w-lg mx-auto" />
-          
-          <div className="mb-8">
-            <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors">
-              <ArrowLeft className="h-4 w-4" /> Back to Home
-            </Link>
+    <div style={{ minHeight: "100vh", backgroundColor: "var(--background)", color: "var(--foreground)", display: "flex", flexDirection: "column" }}>
+      {/* Header */}
+      <header style={{ borderBottom: "1px solid var(--border)", backgroundColor: "var(--background)", position: "sticky", top: 0, zIndex: 50 }}>
+        <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "16px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <Link to="/" style={{ display: "flex", alignItems: "center", gap: "10px", textDecoration: "none" }}>
+            <span style={{ width: 36, height: 36, borderRadius: 10, overflow: "hidden", display: "grid", placeItems: "center", border: "1px solid var(--primary)" }}>
+              <img src="https://i.ibb.co/bMmCYpfm/logo.jpg" alt="Doearno" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            </span>
+            <span style={{ fontFamily: "var(--font-serif)", fontSize: "1.25rem", color: "var(--foreground)", fontWeight: 400 }}>Doearno</span>
+          </Link>
+          <a
+            href="https://official.doearno.in"
+            style={{ backgroundColor: "var(--primary)", color: "var(--primary-foreground)", borderRadius: 999, padding: "8px 20px", fontSize: 14, fontWeight: 600, textDecoration: "none" }}
+          >
+            Start Earning →
+          </a>
+        </div>
+      </header>
+
+      {/* Main */}
+      <main style={{ flex: 1, maxWidth: 640, width: "100%", margin: "0 auto", padding: "40px 20px" }}>
+        {/* Back link */}
+        <Link to="/" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 14, color: "var(--muted-foreground)", textDecoration: "none", marginBottom: 24 }}>
+          ← Back to Home
+        </Link>
+
+        {!isSubmitted ? (
+          <div style={{ backgroundColor: "var(--card)", border: "1px solid var(--border)", borderRadius: 20, padding: "32px 28px", boxShadow: "0 2px 12px rgba(0,0,0,0.06)" }}>
+            {/* Title */}
+            <div style={{ display: "flex", alignItems: "flex-start", gap: 14, marginBottom: 20 }}>
+              <div style={{ width: 44, height: 44, borderRadius: 12, backgroundColor: "rgba(239,68,68,0.1)", display: "grid", placeItems: "center", flexShrink: 0, border: "1px solid rgba(239,68,68,0.25)" }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+              </div>
+              <div>
+                <h1 style={{ fontFamily: "var(--font-serif)", fontSize: "1.6rem", margin: 0, color: "var(--foreground)" }}>Delete Account Request</h1>
+                <p style={{ margin: "4px 0 0", fontSize: 13, color: "var(--muted-foreground)" }}>Request permanent deletion of your Doearno account and data.</p>
+              </div>
+            </div>
+
+            {/* Warning */}
+            <div style={{ backgroundColor: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: 12, padding: "14px 16px", marginBottom: 24, fontSize: 13, color: "var(--muted-foreground)", display: "flex", gap: 10 }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 1 }}>
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                <line x1="12" y1="9" x2="12" y2="13"/>
+                <line x1="12" y1="17" x2="12.01" y2="17"/>
+              </svg>
+              <div>
+                <strong style={{ color: "var(--foreground)" }}>Important:</strong> This action is permanent. You will lose all coins, XP, referral history, and pending withdrawals. Please clear any pending withdrawals before proceeding.
+              </div>
+            </div>
+
+            {/* Form */}
+            <form onSubmit={handleSubmit}>
+              {/* Name */}
+              <div style={{ marginBottom: 18 }}>
+                <label htmlFor="name" style={{ display: "block", fontSize: 13, fontWeight: 500, color: "var(--muted-foreground)", marginBottom: 6 }}>Full Name *</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  required
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="Enter your registered name"
+                  style={{ width: "100%", padding: "10px 14px", borderRadius: 10, border: "1px solid var(--border)", backgroundColor: "var(--background)", color: "var(--foreground)", fontSize: 14, outline: "none", boxSizing: "border-box" }}
+                />
+              </div>
+
+              {/* Phone + Email */}
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 18 }}>
+                <div>
+                  <label htmlFor="phone" style={{ display: "block", fontSize: 13, fontWeight: 500, color: "var(--muted-foreground)", marginBottom: 6 }}>Registered Phone</label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    placeholder="+91 9876543210"
+                    style={{ width: "100%", padding: "10px 14px", borderRadius: 10, border: "1px solid var(--border)", backgroundColor: "var(--background)", color: "var(--foreground)", fontSize: 14, outline: "none", boxSizing: "border-box" }}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="email" style={{ display: "block", fontSize: 13, fontWeight: 500, color: "var(--muted-foreground)", marginBottom: 6 }}>Registered Email</label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="name@example.com"
+                    style={{ width: "100%", padding: "10px 14px", borderRadius: 10, border: "1px solid var(--border)", backgroundColor: "var(--background)", color: "var(--foreground)", fontSize: 14, outline: "none", boxSizing: "border-box" }}
+                  />
+                </div>
+              </div>
+
+              {/* Reason */}
+              <div style={{ marginBottom: 18 }}>
+                <label htmlFor="reason" style={{ display: "block", fontSize: 13, fontWeight: 500, color: "var(--muted-foreground)", marginBottom: 6 }}>Reason for Deletion *</label>
+                <select
+                  id="reason"
+                  name="reason"
+                  required
+                  value={formData.reason}
+                  onChange={handleChange}
+                  style={{ width: "100%", padding: "10px 14px", borderRadius: 10, border: "1px solid var(--border)", backgroundColor: "var(--background)", color: formData.reason ? "var(--foreground)" : "var(--muted-foreground)", fontSize: 14, outline: "none", boxSizing: "border-box" }}
+                >
+                  <option value="" disabled>Select a reason...</option>
+                  <option value="No longer using the app">No longer using the app</option>
+                  <option value="Privacy or data security concerns">Privacy or data security concerns</option>
+                  <option value="Too many technical issues">Too many technical issues</option>
+                  <option value="Earning rates are low">Earning rates are low</option>
+                  <option value="Created a duplicate account">Created a duplicate account</option>
+                  <option value="Other">Other (please specify below)</option>
+                </select>
+              </div>
+
+              {/* Additional Comments */}
+              <div style={{ marginBottom: 18 }}>
+                <label htmlFor="additionalComments" style={{ display: "block", fontSize: 13, fontWeight: 500, color: "var(--muted-foreground)", marginBottom: 6 }}>Additional Comments (Optional)</label>
+                <textarea
+                  id="additionalComments"
+                  name="additionalComments"
+                  rows={3}
+                  value={formData.additionalComments}
+                  onChange={handleChange}
+                  placeholder="Tell us how we can improve..."
+                  style={{ width: "100%", padding: "10px 14px", borderRadius: 10, border: "1px solid var(--border)", backgroundColor: "var(--background)", color: "var(--foreground)", fontSize: 14, outline: "none", resize: "none", boxSizing: "border-box", fontFamily: "inherit" }}
+                />
+              </div>
+
+              {/* Checkbox */}
+              <div style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 24, padding: "12px 14px", borderRadius: 10, backgroundColor: "var(--muted)", border: "1px solid var(--border)" }}>
+                <input
+                  type="checkbox"
+                  id="confirmLoss"
+                  name="confirmLoss"
+                  checked={formData.confirmLoss}
+                  onChange={handleChange}
+                  style={{ marginTop: 2, width: 16, height: 16, flexShrink: 0, accentColor: "var(--primary)", cursor: "pointer" }}
+                />
+                <label htmlFor="confirmLoss" style={{ fontSize: 13, color: "var(--muted-foreground)", lineHeight: 1.5, cursor: "pointer" }}>
+                  I confirm I want to permanently delete my account. I understand all my coins, XP, rewards, and referral history will be erased and <strong style={{ color: "var(--foreground)" }}>cannot be recovered</strong>. *
+                </label>
+              </div>
+
+              {/* Submit Button */}
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                style={{ width: "100%", padding: "13px 20px", borderRadius: 999, backgroundColor: isSubmitting ? "var(--muted)" : "var(--primary)", color: "var(--primary-foreground)", fontSize: 15, fontWeight: 600, border: "none", cursor: isSubmitting ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}
+              >
+                {isSubmitting ? (
+                  <>
+                    <span style={{ width: 16, height: 16, border: "2px solid rgba(255,255,255,0.4)", borderTopColor: "white", borderRadius: "50%", display: "inline-block", animation: "spin 0.7s linear infinite" }} />
+                    Sending request...
+                  </>
+                ) : (
+                  "Submit Account Deletion Request"
+                )}
+              </button>
+
+              <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+            </form>
           </div>
-
-          {!isSubmitted ? (
-            <div className="bg-card border border-border rounded-3xl p-8 md:p-10 shadow-lg relative">
-              <div className="flex items-start gap-4 mb-6">
-                <div className="grid h-12 w-12 place-items-center rounded-2xl bg-destructive/10 text-destructive border border-destructive/20 shrink-0">
-                  <ShieldAlert className="h-6 w-6" />
-                </div>
-                <div>
-                  <h1 className="font-serif text-3xl md:text-4xl text-foreground">Delete Account Request</h1>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    Request permanent deletion of your Doearno account and associated data.
-                  </p>
-                </div>
-              </div>
-
-              <div className="bg-destructive-foreground/5 border border-destructive/20 rounded-2xl p-5 mb-8 flex gap-3 text-sm text-muted-foreground">
-                <AlertTriangle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
-                <div>
-                  <span className="font-semibold text-foreground">Important Note:</span> Account deletion is permanent and cannot be undone. You will lose access to all your earned coins, XP, active referral networks, and history. If you have pending withdrawals, please wait for them to clear before deleting your account.
-                </div>
-              </div>
-
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-muted-foreground mb-2">
-                    Full Name *
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    required
-                    value={formData.name}
-                    onChange={handleChange}
-                    placeholder="Enter your registered name"
-                    className="w-full px-4 py-3 rounded-xl bg-background border border-border/60 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-foreground transition-all"
-                  />
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-muted-foreground mb-2">
-                      Registered Phone Number (UPI/App login)
-                    </label>
-                    <input
-                      type="tel"
-                      id="phone"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleChange}
-                      placeholder="e.g. +91 9876543210"
-                      className="w-full px-4 py-3 rounded-xl bg-background border border-border/60 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-foreground transition-all"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-muted-foreground mb-2">
-                      Registered Email Address
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      placeholder="e.g. name@example.com"
-                      className="w-full px-4 py-3 rounded-xl bg-background border border-border/60 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-foreground transition-all"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label htmlFor="reason" className="block text-sm font-medium text-muted-foreground mb-2">
-                    Why do you want to delete your account? *
-                  </label>
-                  <select
-                    id="reason"
-                    name="reason"
-                    required
-                    value={formData.reason}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-xl bg-background border border-border/60 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-foreground transition-all"
-                  >
-                    <option value="" disabled className="bg-background text-foreground">Select a reason</option>
-                    <option value="No longer using the app" className="bg-background text-foreground">No longer using the app</option>
-                    <option value="Privacy or data security concerns" className="bg-background text-foreground">Privacy or data security concerns</option>
-                    <option value="Too many technical issues/bugs" className="bg-background text-foreground">Too many technical issues/bugs</option>
-                    <option value="Earning rates are low" className="bg-background text-foreground">Earning rates are low</option>
-                    <option value="Created a duplicate account" className="bg-background text-foreground">Created a duplicate account</option>
-                    <option value="Other" className="bg-background text-foreground">Other (please specify below)</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label htmlFor="additionalComments" className="block text-sm font-medium text-muted-foreground mb-2">
-                    Additional comments or feedback (Optional)
-                  </label>
-                  <textarea
-                    id="additionalComments"
-                    name="additionalComments"
-                    rows={3}
-                    value={formData.additionalComments}
-                    onChange={handleChange}
-                    placeholder="Tell us how we can improve..."
-                    className="w-full px-4 py-3 rounded-xl bg-background border border-border/60 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-foreground transition-all resize-none"
-                  />
-                </div>
-
-                <div className="flex items-start gap-3 pt-2">
-                  <input
-                    type="checkbox"
-                    id="confirmLoss"
-                    name="confirmLoss"
-                    checked={formData.confirmLoss}
-                    onChange={handleChange}
-                    className="mt-1 h-4 w-4 rounded border-border text-primary focus:ring-primary"
-                  />
-                  <label htmlFor="confirmLoss" className="text-sm text-muted-foreground leading-relaxed cursor-pointer">
-                    I confirm that I want to delete my Doearno account and understand that all my data, including coins, referral rewards, and history, will be permanently erased. *
-                  </label>
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full btn-3d rounded-full bg-primary hover:bg-primary-deep text-primary-foreground font-semibold py-4 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-[var(--shadow-glow)]"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
-                      Generating request...
-                    </>
-                  ) : (
-                    "Submit Account Deletion Request"
-                  )}
-                </button>
-              </form>
+        ) : (
+          /* Success State */
+          <div style={{ backgroundColor: "var(--card)", border: "1px solid var(--border)", borderRadius: 20, padding: "40px 28px", boxShadow: "0 2px 12px rgba(0,0,0,0.06)", textAlign: "center" }}>
+            <div style={{ width: 64, height: 64, borderRadius: "50%", backgroundColor: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.3)", display: "grid", placeItems: "center", margin: "0 auto 20px" }}>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
             </div>
-          ) : (
-            <div className="bg-card border border-border rounded-3xl p-10 shadow-lg text-center relative">
-              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary border border-primary/20 animate-bounce">
-                <CheckCircle2 className="h-8 w-8" />
-              </div>
-              <h1 className="font-serif text-4xl text-foreground mb-4">Request Generated!</h1>
-              <p className="text-muted-foreground leading-relaxed mb-6">
-                Thank you. We have pre-filled an email deletion request for you. 
-                If your email application did not open automatically, please click the button below to send your request.
-              </p>
+            <h1 style={{ fontFamily: "var(--font-serif)", fontSize: "1.75rem", margin: "0 0 12px", color: "var(--foreground)" }}>Request Generated!</h1>
+            <p style={{ fontSize: 14, color: "var(--muted-foreground)", marginBottom: 24, lineHeight: 1.6 }}>
+              Your deletion request has been prepared. If your email app didn't open automatically, click the button below to send it manually to <strong>business@doearno.in</strong>.
+            </p>
 
-              <div className="bg-background/20 border border-border/20 rounded-2xl p-5 mb-8 text-left space-y-3 text-sm">
-                <p className="font-semibold text-foreground text-center border-b border-border/10 pb-2 mb-2">Request Details</p>
-                <div><span className="text-muted-foreground font-medium">Name:</span> {formData.name}</div>
-                {formData.phone && <div><span className="text-muted-foreground font-medium">Phone:</span> {formData.phone}</div>}
-                {formData.email && <div><span className="text-muted-foreground font-medium">Email:</span> {formData.email}</div>}
-                <div><span className="text-muted-foreground font-medium">Reason:</span> {formData.reason}</div>
+            {/* Summary */}
+            <div style={{ backgroundColor: "var(--background)", border: "1px solid var(--border)", borderRadius: 12, padding: "16px 20px", marginBottom: 24, textAlign: "left" }}>
+              <p style={{ margin: "0 0 12px", fontWeight: 600, fontSize: 13, color: "var(--foreground)", borderBottom: "1px solid var(--border)", paddingBottom: 8 }}>Request Summary</p>
+              <div style={{ fontSize: 13, color: "var(--muted-foreground)", lineHeight: 2 }}>
+                <div><strong>Name:</strong> {formData.name}</div>
+                {formData.phone && <div><strong>Phone:</strong> {formData.phone}</div>}
+                {formData.email && <div><strong>Email:</strong> {formData.email}</div>}
+                <div><strong>Reason:</strong> {formData.reason}</div>
               </div>
-
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <a
-                  href={`mailto:business@doearno.in?subject=${encodeURIComponent("Doearno - Account Deletion Request")}&body=${encodeURIComponent(
-                    `Dear Doearno Support Team,\n\nI request deletion of my Doearno account.\nName: ${formData.name}\nPhone: ${formData.phone}\nEmail: ${formData.email}\nReason: ${formData.reason}\n\nThank you.`
-                  )}`}
-                  className="btn-3d rounded-full bg-primary hover:bg-primary-deep text-primary-foreground font-semibold px-6 py-3 flex items-center justify-center gap-2 cursor-pointer"
-                >
-                  <Mail className="h-4 w-4" /> Send Email Again
-                </a>
-                <Link
-                  to="/"
-                  className="btn-3d glass rounded-full px-6 py-3 flex items-center justify-center hover:text-primary transition-all"
-                >
-                  Go back to Home
-                </Link>
-              </div>
-
-              <p className="text-xs text-muted-foreground mt-8">
-                Your request will be processed within 7 working days after receipt of your email. You will receive a confirmation message once deletion is complete.
-              </p>
             </div>
-          )}
-        </main>
-      </div>
-      
-      <Footer />
+
+            {/* Action Buttons */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              <a
+                href={`mailto:business@doearno.in?subject=${encodeURIComponent("Doearno - Account Deletion Request")}&body=${encodeURIComponent(`Dear Doearno Support Team,\n\nI request deletion of my Doearno account.\nName: ${formData.name}\nPhone: ${formData.phone}\nEmail: ${formData.email}\nReason: ${formData.reason}\n\nThank you.\n${formData.name}`)}`}
+                style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "12px 20px", borderRadius: 999, backgroundColor: "var(--primary)", color: "var(--primary-foreground)", fontWeight: 600, fontSize: 14, textDecoration: "none" }}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                  <polyline points="22,6 12,13 2,6"/>
+                </svg>
+                Send Email Again
+              </a>
+              <Link
+                to="/"
+                style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "12px 20px", borderRadius: 999, border: "1px solid var(--border)", color: "var(--foreground)", textDecoration: "none", fontSize: 14, fontWeight: 500 }}
+              >
+                Go back to Home
+              </Link>
+            </div>
+
+            <p style={{ fontSize: 12, color: "var(--muted-foreground)", marginTop: 20 }}>
+              Your request will be processed within 7 working days after we receive your email.
+            </p>
+          </div>
+        )}
+      </main>
+
+      {/* Footer */}
+      <footer style={{ borderTop: "1px solid var(--border)", backgroundColor: "var(--background)", padding: "24px", textAlign: "center" }}>
+        <div style={{ maxWidth: 640, margin: "0 auto", display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
+          <Link to="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none" }}>
+            <span style={{ width: 30, height: 30, borderRadius: 8, overflow: "hidden", display: "grid", placeItems: "center" }}>
+              <img src="https://i.ibb.co/bMmCYpfm/logo.jpg" alt="Doearno" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            </span>
+            <span style={{ fontFamily: "var(--font-serif)", color: "var(--foreground)" }}>Doearno</span>
+          </Link>
+          <p style={{ fontSize: 12, color: "var(--muted-foreground)", margin: 0 }}>© 2026 Doearno · business@doearno.in</p>
+        </div>
+      </footer>
     </div>
   );
 }
