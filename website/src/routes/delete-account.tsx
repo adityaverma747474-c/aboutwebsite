@@ -1,364 +1,289 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState, useEffect, useRef } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/delete-account")({
   component: DeleteAccount,
 });
 
+const inputStyle: React.CSSProperties = {
+  width: "100%",
+  padding: "12px 16px",
+  borderRadius: 10,
+  border: "1px solid #d1d5db",
+  backgroundColor: "#ffffff",
+  color: "#111827",
+  fontSize: 16,
+  outline: "none",
+  boxSizing: "border-box",
+  fontFamily: "inherit",
+  WebkitUserSelect: "text",
+  userSelect: "text",
+  touchAction: "manipulation",
+};
+
+const labelStyle: React.CSSProperties = {
+  display: "block",
+  fontSize: 13,
+  fontWeight: 600,
+  color: "#374151",
+  marginBottom: 6,
+};
+
 export default function DeleteAccount() {
   const nameRef = useRef<HTMLInputElement>(null);
   const phoneRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
+  const reasonRef = useRef<HTMLSelectElement>(null);
   const commentsRef = useRef<HTMLTextAreaElement>(null);
-
-  const [formData, setFormData] = useState({
-    name: "",
-    phone: "",
-    email: "",
-    reason: "",
-    additionalComments: "",
-    confirmLoss: false,
-  });
-
-  // Fix: Override Flutter WebView's JS injection that blocks user-select on inputs
-  useEffect(() => {
-    const style = document.createElement("style");
-    style.id = "delete-form-fix";
-    style.innerHTML = `
-      input, textarea, select {
-        -webkit-user-select: text !important;
-        -moz-user-select: text !important;
-        -ms-user-select: text !important;
-        user-select: text !important;
-        touch-action: manipulation !important;
-        pointer-events: auto !important;
-        -webkit-tap-highlight-color: rgba(0,0,0,0.05) !important;
-      }
-    `;
-    document.head.appendChild(style);
-
-    // Also re-attach selectstart listeners to allow selection in inputs
-    const allowSelectInInputs = (e: Event) => {
-      const target = e.target as HTMLElement;
-      const tag = target.tagName;
-      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") {
-        e.stopImmediatePropagation();
-      }
-    };
-    document.addEventListener("selectstart", allowSelectInInputs, true);
-
-    return () => {
-      document.head.removeChild(style);
-      document.removeEventListener("selectstart", allowSelectInInputs, true);
-    };
-  }, []);
-
+  const confirmRef = useRef<HTMLInputElement>(null);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
-    const { name, value, type } = e.target;
-    if (type === "checkbox") {
-      const checked = (e.target as HTMLInputElement).checked;
-      setFormData((prev) => ({ ...prev, [name]: checked }));
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    }
-  };
+  const [submittedData, setSubmittedData] = useState({ name: "", phone: "", email: "", reason: "" });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.name.trim()) {
-      toast.error("Please enter your name");
-      return;
-    }
-    if (!formData.phone.trim() && !formData.email.trim()) {
-      toast.error("Please enter your registered Phone Number or Email");
-      return;
-    }
-    if (!formData.reason) {
-      toast.error("Please select a reason for deletion");
-      return;
-    }
-    if (!formData.confirmLoss) {
-      toast.error("Please confirm you understand the permanent data loss");
-      return;
-    }
+    const name = nameRef.current?.value.trim() || "";
+    const phone = phoneRef.current?.value.trim() || "";
+    const email = emailRef.current?.value.trim() || "";
+    const reason = reasonRef.current?.value || "";
+    const comments = commentsRef.current?.value.trim() || "";
+    const confirmed = confirmRef.current?.checked || false;
+
+    if (!name) { toast.error("Apna naam likhein"); return; }
+    if (!phone && !email) { toast.error("Phone number ya Email mein se ek zaroori hai"); return; }
+    if (!reason) { toast.error("Account delete karne ki wajah chunein"); return; }
+    if (!confirmed) { toast.error("Confirmation checkbox par tick karein"); return; }
 
     setIsSubmitting(true);
+    setSubmittedData({ name, phone, email, reason });
 
     setTimeout(() => {
-      const emailTo = "business@doearno.in";
       const subject = encodeURIComponent("Doearno - Account Deletion Request");
       const body = encodeURIComponent(
         `Dear Doearno Support Team,\n\n` +
-        `I am writing to request permanent deletion of my Doearno account.\n\n` +
-        `Full Name: ${formData.name}\n` +
-        `Phone Number: ${formData.phone || "Not provided"}\n` +
-        `Email Address: ${formData.email || "Not provided"}\n` +
-        `Reason: ${formData.reason}\n` +
-        `Additional Comments: ${formData.additionalComments || "None"}\n\n` +
-        `I understand this action is permanent and all my data, coins, and referral history will be erased.\n\n` +
-        `Please process this request within 7 working days.\n\n` +
-        `Regards,\n${formData.name}`
+        `I request permanent deletion of my Doearno account.\n\n` +
+        `Full Name: ${name}\n` +
+        `Phone: ${phone || "Not provided"}\n` +
+        `Email: ${email || "Not provided"}\n` +
+        `Reason: ${reason}\n` +
+        `Comments: ${comments || "None"}\n\n` +
+        `I confirm this action is permanent and I will lose all my coins, XP, and referral history.\n\n` +
+        `Regards,\n${name}`
       );
-
-      window.location.href = `mailto:${emailTo}?subject=${subject}&body=${body}`;
+      window.location.href = `mailto:business@doearno.in?subject=${subject}&body=${body}`;
       setIsSubmitting(false);
       setIsSubmitted(true);
-      toast.success("Email client opened. Please send the email to complete your request.");
-    }, 800);
+    }, 600);
   };
 
   return (
-    <div style={{ minHeight: "100vh", backgroundColor: "var(--background)", color: "var(--foreground)", display: "flex", flexDirection: "column" }}>
+    <div style={{ minHeight: "100vh", backgroundColor: "#f9fafb", color: "#111827", display: "flex", flexDirection: "column" }}>
+
       {/* Header */}
-      <header style={{ borderBottom: "1px solid var(--border)", backgroundColor: "var(--background)", position: "sticky", top: 0, zIndex: 50 }}>
-        <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "16px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <Link to="/" style={{ display: "flex", alignItems: "center", gap: "10px", textDecoration: "none" }}>
-            <span style={{ width: 36, height: 36, borderRadius: 10, overflow: "hidden", display: "grid", placeItems: "center", border: "1px solid var(--primary)" }}>
-              <img src="https://i.ibb.co/bMmCYpfm/logo.jpg" alt="Doearno" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-            </span>
-            <span style={{ fontFamily: "var(--font-serif)", fontSize: "1.25rem", color: "var(--foreground)", fontWeight: 400 }}>Doearno</span>
+      <header style={{ backgroundColor: "#ffffff", borderBottom: "1px solid #e5e7eb", position: "sticky", top: 0, zIndex: 50 }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto", padding: "14px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <Link to="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
+            <img src="https://i.ibb.co/bMmCYpfm/logo.jpg" alt="Doearno" style={{ width: 34, height: 34, borderRadius: 8, objectFit: "cover" }} />
+            <span style={{ fontFamily: "'Instrument Serif', serif", fontSize: "1.3rem", color: "#111827" }}>Doearno</span>
           </Link>
-          <a
-            href="https://official.doearno.in"
-            style={{ backgroundColor: "var(--primary)", color: "var(--primary-foreground)", borderRadius: 999, padding: "8px 20px", fontSize: 14, fontWeight: 600, textDecoration: "none" }}
-          >
+          <a href="https://official.doearno.in"
+            style={{ backgroundColor: "#059669", color: "#fff", borderRadius: 999, padding: "8px 20px", fontSize: 14, fontWeight: 600, textDecoration: "none" }}>
             Start Earning →
           </a>
         </div>
       </header>
 
       {/* Main */}
-      <main style={{ flex: 1, maxWidth: 640, width: "100%", margin: "0 auto", padding: "40px 20px" }}>
-        {/* Back link */}
-        <Link to="/" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 14, color: "var(--muted-foreground)", textDecoration: "none", marginBottom: 24 }}>
-          ← Back to Home
+      <main style={{ flex: 1, maxWidth: 620, width: "100%", margin: "0 auto", padding: "32px 16px" }}>
+
+        <Link to="/" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 14, color: "#6b7280", textDecoration: "none", marginBottom: 20 }}>
+          ← Home par wapas jaayein
         </Link>
 
         {!isSubmitted ? (
-          <div style={{ backgroundColor: "var(--card)", border: "1px solid var(--border)", borderRadius: 20, padding: "32px 28px", boxShadow: "0 2px 12px rgba(0,0,0,0.06)" }}>
+          <div style={{ backgroundColor: "#ffffff", border: "1px solid #e5e7eb", borderRadius: 16, padding: "28px 24px", boxShadow: "0 1px 8px rgba(0,0,0,0.06)" }}>
+
             {/* Title */}
-            <div style={{ display: "flex", alignItems: "flex-start", gap: 14, marginBottom: 20 }}>
-              <div style={{ width: 44, height: 44, borderRadius: 12, backgroundColor: "rgba(239,68,68,0.1)", display: "grid", placeItems: "center", flexShrink: 0, border: "1px solid rgba(239,68,68,0.25)" }}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+              <div style={{ width: 42, height: 42, borderRadius: 10, backgroundColor: "#fee2e2", display: "grid", placeItems: "center", flexShrink: 0 }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                 </svg>
               </div>
               <div>
-                <h1 style={{ fontFamily: "var(--font-serif)", fontSize: "1.6rem", margin: 0, color: "var(--foreground)" }}>Delete Account Request</h1>
-                <p style={{ margin: "4px 0 0", fontSize: 13, color: "var(--muted-foreground)" }}>Request permanent deletion of your Doearno account and data.</p>
+                <h1 style={{ margin: 0, fontSize: "1.4rem", fontFamily: "'Instrument Serif', serif", color: "#111827" }}>Account Delete Request</h1>
+                <p style={{ margin: "3px 0 0", fontSize: 13, color: "#6b7280" }}>Apne Doearno account ko permanently delete karein</p>
               </div>
             </div>
 
-            {/* Warning */}
-            <div style={{ backgroundColor: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: 12, padding: "14px 16px", marginBottom: 24, fontSize: 13, color: "var(--muted-foreground)", display: "flex", gap: 10 }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 1 }}>
+            {/* Warning Box */}
+            <div style={{ backgroundColor: "#fff7ed", border: "1px solid #fed7aa", borderRadius: 10, padding: "12px 16px", marginBottom: 22, fontSize: 13, color: "#92400e", display: "flex", gap: 10 }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d97706" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 1 }}>
                 <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-                <line x1="12" y1="9" x2="12" y2="13"/>
-                <line x1="12" y1="17" x2="12.01" y2="17"/>
+                <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
               </svg>
-              <div>
-                <strong style={{ color: "var(--foreground)" }}>Important:</strong> This action is permanent. You will lose all coins, XP, referral history, and pending withdrawals. Please clear any pending withdrawals before proceeding.
-              </div>
+              <span><strong>Dhyan dein:</strong> Yeh action permanent hai. Aapke saare coins, XP, referral history aur pending withdrawals hamesha ke liye delete ho jayenge.</span>
             </div>
 
-            {/* Form */}
-            <form onSubmit={handleSubmit}>
+            {/* FORM — using uncontrolled inputs (no value prop) */}
+            <form onSubmit={handleSubmit} autoComplete="on">
+
               {/* Name */}
-              <div style={{ marginBottom: 18 }}>
-                <label htmlFor="del-name" style={{ display: "block", fontSize: 13, fontWeight: 500, color: "var(--muted-foreground)", marginBottom: 6 }}>Full Name *</label>
+              <div style={{ marginBottom: 16 }}>
+                <label htmlFor="del-name" style={labelStyle}>Poora Naam *</label>
                 <input
                   ref={nameRef}
                   type="text"
                   id="del-name"
-                  name="name"
-                  required
+                  name="fullname"
                   autoComplete="name"
-                  inputMode="text"
-                  value={formData.name}
-                  onChange={handleChange}
-                  onInput={(e) => setFormData(p => ({ ...p, name: (e.target as HTMLInputElement).value }))}
-                  placeholder="Enter your registered name"
-                  style={{ width: "100%", padding: "10px 14px", borderRadius: 10, border: "1px solid var(--border)", backgroundColor: "var(--background)", color: "var(--foreground)", fontSize: 16, outline: "none", boxSizing: "border-box", WebkitUserSelect: "text", userSelect: "text" }}
+                  placeholder="Apna registered naam likhein"
+                  style={inputStyle}
                 />
               </div>
 
               {/* Phone + Email */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 18 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
                 <div>
-                  <label htmlFor="del-phone" style={{ display: "block", fontSize: 13, fontWeight: 500, color: "var(--muted-foreground)", marginBottom: 6 }}>Registered Phone</label>
+                  <label htmlFor="del-phone" style={labelStyle}>Phone Number</label>
                   <input
                     ref={phoneRef}
                     type="tel"
                     id="del-phone"
                     name="phone"
                     autoComplete="tel"
-                    inputMode="tel"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    onInput={(e) => setFormData(p => ({ ...p, phone: (e.target as HTMLInputElement).value }))}
                     placeholder="+91 9876543210"
-                    style={{ width: "100%", padding: "10px 14px", borderRadius: 10, border: "1px solid var(--border)", backgroundColor: "var(--background)", color: "var(--foreground)", fontSize: 16, outline: "none", boxSizing: "border-box", WebkitUserSelect: "text", userSelect: "text" }}
+                    style={inputStyle}
                   />
                 </div>
                 <div>
-                  <label htmlFor="del-email" style={{ display: "block", fontSize: 13, fontWeight: 500, color: "var(--muted-foreground)", marginBottom: 6 }}>Registered Email</label>
+                  <label htmlFor="del-email" style={labelStyle}>Email Address</label>
                   <input
                     ref={emailRef}
                     type="email"
                     id="del-email"
                     name="email"
                     autoComplete="email"
-                    inputMode="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    onInput={(e) => setFormData(p => ({ ...p, email: (e.target as HTMLInputElement).value }))}
-                    placeholder="name@example.com"
-                    style={{ width: "100%", padding: "10px 14px", borderRadius: 10, border: "1px solid var(--border)", backgroundColor: "var(--background)", color: "var(--foreground)", fontSize: 16, outline: "none", boxSizing: "border-box", WebkitUserSelect: "text", userSelect: "text" }}
+                    placeholder="naam@example.com"
+                    style={inputStyle}
                   />
                 </div>
               </div>
 
               {/* Reason */}
-              <div style={{ marginBottom: 18 }}>
-                <label htmlFor="reason" style={{ display: "block", fontSize: 13, fontWeight: 500, color: "var(--muted-foreground)", marginBottom: 6 }}>Reason for Deletion *</label>
+              <div style={{ marginBottom: 16 }}>
+                <label htmlFor="del-reason" style={labelStyle}>Delete karne ki wajah *</label>
                 <select
-                  id="reason"
+                  ref={reasonRef}
+                  id="del-reason"
                   name="reason"
-                  required
-                  value={formData.reason}
-                  onChange={handleChange}
-                  style={{ width: "100%", padding: "10px 14px", borderRadius: 10, border: "1px solid var(--border)", backgroundColor: "var(--background)", color: formData.reason ? "var(--foreground)" : "var(--muted-foreground)", fontSize: 14, outline: "none", boxSizing: "border-box" }}
+                  style={{ ...inputStyle, color: "#374151" }}
                 >
-                  <option value="" disabled>Select a reason...</option>
-                  <option value="No longer using the app">No longer using the app</option>
-                  <option value="Privacy or data security concerns">Privacy or data security concerns</option>
-                  <option value="Too many technical issues">Too many technical issues</option>
-                  <option value="Earning rates are low">Earning rates are low</option>
-                  <option value="Created a duplicate account">Created a duplicate account</option>
-                  <option value="Other">Other (please specify below)</option>
+                  <option value="">Wajah chunein...</option>
+                  <option value="App ab use nahi karta">App ab use nahi karta</option>
+                  <option value="Privacy concerns">Privacy ya data security concerns</option>
+                  <option value="Technical issues">Bahut zyada technical issues</option>
+                  <option value="Earning rates kam hain">Earning rates kam hain</option>
+                  <option value="Duplicate account">Duplicate account banaya tha</option>
+                  <option value="Other">Kuch aur (neeche likhein)</option>
                 </select>
               </div>
 
-              {/* Additional Comments */}
-              <div style={{ marginBottom: 18 }}>
-                <label htmlFor="del-comments" style={{ display: "block", fontSize: 13, fontWeight: 500, color: "var(--muted-foreground)", marginBottom: 6 }}>Additional Comments (Optional)</label>
+              {/* Comments */}
+              <div style={{ marginBottom: 16 }}>
+                <label htmlFor="del-comments" style={labelStyle}>Additional Comments (Optional)</label>
                 <textarea
                   ref={commentsRef}
                   id="del-comments"
-                  name="additionalComments"
+                  name="comments"
                   rows={3}
-                  value={formData.additionalComments}
-                  onChange={handleChange}
-                  onInput={(e) => setFormData(p => ({ ...p, additionalComments: (e.target as HTMLTextAreaElement).value }))}
-                  placeholder="Tell us how we can improve..."
-                  style={{ width: "100%", padding: "10px 14px", borderRadius: 10, border: "1px solid var(--border)", backgroundColor: "var(--background)", color: "var(--foreground)", fontSize: 16, outline: "none", resize: "none", boxSizing: "border-box", fontFamily: "inherit", WebkitUserSelect: "text", userSelect: "text" }}
+                  placeholder="Hume kaise better kar sakte hain..."
+                  style={{ ...inputStyle, resize: "none" }}
                 />
               </div>
 
               {/* Checkbox */}
-              <div style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 24, padding: "12px 14px", borderRadius: 10, backgroundColor: "var(--muted)", border: "1px solid var(--border)" }}>
+              <div style={{ backgroundColor: "#f3f4f6", borderRadius: 10, padding: "14px 16px", marginBottom: 20, display: "flex", alignItems: "flex-start", gap: 12 }}>
                 <input
+                  ref={confirmRef}
                   type="checkbox"
-                  id="confirmLoss"
-                  name="confirmLoss"
-                  checked={formData.confirmLoss}
-                  onChange={handleChange}
-                  style={{ marginTop: 2, width: 16, height: 16, flexShrink: 0, accentColor: "var(--primary)", cursor: "pointer" }}
+                  id="del-confirm"
+                  style={{ width: 18, height: 18, marginTop: 2, accentColor: "#059669", cursor: "pointer", flexShrink: 0 }}
                 />
-                <label htmlFor="confirmLoss" style={{ fontSize: 13, color: "var(--muted-foreground)", lineHeight: 1.5, cursor: "pointer" }}>
-                  I confirm I want to permanently delete my account. I understand all my coins, XP, rewards, and referral history will be erased and <strong style={{ color: "var(--foreground)" }}>cannot be recovered</strong>. *
+                <label htmlFor="del-confirm" style={{ fontSize: 13, color: "#374151", lineHeight: 1.6, cursor: "pointer" }}>
+                  Main confirm karta/karti hoon ki mera account permanently delete ho jayega aur saare coins, XP, aur referral history <strong>wapas nahi ayenge</strong>. *
                 </label>
               </div>
 
-              {/* Submit Button */}
+              {/* Submit */}
               <button
                 type="submit"
                 disabled={isSubmitting}
-                style={{ width: "100%", padding: "13px 20px", borderRadius: 999, backgroundColor: isSubmitting ? "var(--muted)" : "var(--primary)", color: "var(--primary-foreground)", fontSize: 15, fontWeight: 600, border: "none", cursor: isSubmitting ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}
+                style={{ width: "100%", padding: "14px", borderRadius: 999, backgroundColor: isSubmitting ? "#d1d5db" : "#dc2626", color: "#ffffff", fontSize: 15, fontWeight: 700, border: "none", cursor: isSubmitting ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}
               >
                 {isSubmitting ? (
                   <>
-                    <span style={{ width: 16, height: 16, border: "2px solid rgba(255,255,255,0.4)", borderTopColor: "white", borderRadius: "50%", display: "inline-block", animation: "spin 0.7s linear infinite" }} />
-                    Sending request...
+                    <span style={{ width: 16, height: 16, border: "2px solid rgba(255,255,255,0.5)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin 0.7s linear infinite", display: "inline-block" }} />
+                    Bhej rahe hain...
                   </>
-                ) : (
-                  "Submit Account Deletion Request"
-                )}
+                ) : "Account Delete Request Submit Karein"}
               </button>
-
               <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+
+              <p style={{ textAlign: "center", fontSize: 12, color: "#9ca3af", marginTop: 12 }}>
+                Submit karne par aapka email app khulega — email send karna na bhulein
+              </p>
             </form>
           </div>
+
         ) : (
-          /* Success State */
-          <div style={{ backgroundColor: "var(--card)", border: "1px solid var(--border)", borderRadius: 20, padding: "40px 28px", boxShadow: "0 2px 12px rgba(0,0,0,0.06)", textAlign: "center" }}>
-            <div style={{ width: 64, height: 64, borderRadius: "50%", backgroundColor: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.3)", display: "grid", placeItems: "center", margin: "0 auto 20px" }}>
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          // Success
+          <div style={{ backgroundColor: "#ffffff", border: "1px solid #e5e7eb", borderRadius: 16, padding: "40px 24px", textAlign: "center", boxShadow: "0 1px 8px rgba(0,0,0,0.06)" }}>
+            <div style={{ width: 64, height: 64, borderRadius: "50%", backgroundColor: "#dcfce7", display: "grid", placeItems: "center", margin: "0 auto 16px" }}>
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="20 6 9 17 4 12"/>
               </svg>
             </div>
-            <h1 style={{ fontFamily: "var(--font-serif)", fontSize: "1.75rem", margin: "0 0 12px", color: "var(--foreground)" }}>Request Generated!</h1>
-            <p style={{ fontSize: 14, color: "var(--muted-foreground)", marginBottom: 24, lineHeight: 1.6 }}>
-              Your deletion request has been prepared. If your email app didn't open automatically, click the button below to send it manually to <strong>business@doearno.in</strong>.
+            <h1 style={{ fontFamily: "'Instrument Serif', serif", fontSize: "1.8rem", margin: "0 0 10px", color: "#111827" }}>Request Send Ho Gayi!</h1>
+            <p style={{ fontSize: 14, color: "#6b7280", marginBottom: 20, lineHeight: 1.7 }}>
+              Aapka email app open ho gaya hoga. Agar nahi hua, neeche button se manually bhejein <strong>business@doearno.in</strong> par.
             </p>
 
-            {/* Summary */}
-            <div style={{ backgroundColor: "var(--background)", border: "1px solid var(--border)", borderRadius: 12, padding: "16px 20px", marginBottom: 24, textAlign: "left" }}>
-              <p style={{ margin: "0 0 12px", fontWeight: 600, fontSize: 13, color: "var(--foreground)", borderBottom: "1px solid var(--border)", paddingBottom: 8 }}>Request Summary</p>
-              <div style={{ fontSize: 13, color: "var(--muted-foreground)", lineHeight: 2 }}>
-                <div><strong>Name:</strong> {formData.name}</div>
-                {formData.phone && <div><strong>Phone:</strong> {formData.phone}</div>}
-                {formData.email && <div><strong>Email:</strong> {formData.email}</div>}
-                <div><strong>Reason:</strong> {formData.reason}</div>
+            <div style={{ backgroundColor: "#f9fafb", border: "1px solid #e5e7eb", borderRadius: 10, padding: "14px 18px", marginBottom: 20, textAlign: "left" }}>
+              <p style={{ margin: "0 0 10px", fontWeight: 700, fontSize: 13, color: "#374151", borderBottom: "1px solid #e5e7eb", paddingBottom: 8 }}>Request Summary</p>
+              <div style={{ fontSize: 13, color: "#6b7280", lineHeight: 2 }}>
+                <div><strong>Naam:</strong> {submittedData.name}</div>
+                {submittedData.phone && <div><strong>Phone:</strong> {submittedData.phone}</div>}
+                {submittedData.email && <div><strong>Email:</strong> {submittedData.email}</div>}
+                <div><strong>Wajah:</strong> {submittedData.reason}</div>
               </div>
             </div>
 
-            {/* Action Buttons */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               <a
-                href={`mailto:business@doearno.in?subject=${encodeURIComponent("Doearno - Account Deletion Request")}&body=${encodeURIComponent(`Dear Doearno Support Team,\n\nI request deletion of my Doearno account.\nName: ${formData.name}\nPhone: ${formData.phone}\nEmail: ${formData.email}\nReason: ${formData.reason}\n\nThank you.\n${formData.name}`)}`}
-                style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "12px 20px", borderRadius: 999, backgroundColor: "var(--primary)", color: "var(--primary-foreground)", fontWeight: 600, fontSize: 14, textDecoration: "none" }}
+                href={`mailto:business@doearno.in?subject=${encodeURIComponent("Doearno - Account Deletion Request")}&body=${encodeURIComponent(`Dear Doearno Support Team,\n\nI request deletion of my account.\nName: ${submittedData.name}\nPhone: ${submittedData.phone}\nEmail: ${submittedData.email}\nReason: ${submittedData.reason}\n\nThank you.`)}`}
+                style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, padding: "13px", borderRadius: 999, backgroundColor: "#059669", color: "#fff", fontWeight: 700, fontSize: 14, textDecoration: "none" }}
               >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                  <polyline points="22,6 12,13 2,6"/>
-                </svg>
-                Send Email Again
+                📧 Email Dobara Bhejein
               </a>
-              <Link
-                to="/"
-                style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "12px 20px", borderRadius: 999, border: "1px solid var(--border)", color: "var(--foreground)", textDecoration: "none", fontSize: 14, fontWeight: 500 }}
-              >
-                Go back to Home
+              <Link to="/" style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "13px", borderRadius: 999, border: "1px solid #e5e7eb", color: "#374151", textDecoration: "none", fontSize: 14, fontWeight: 500 }}>
+                Home par Wapas Jaayein
               </Link>
             </div>
 
-            <p style={{ fontSize: 12, color: "var(--muted-foreground)", marginTop: 20 }}>
-              Your request will be processed within 7 working days after we receive your email.
+            <p style={{ fontSize: 12, color: "#9ca3af", marginTop: 16 }}>
+              Aapki request 7 working days ke andar process ki jayegi.
             </p>
           </div>
         )}
       </main>
 
       {/* Footer */}
-      <footer style={{ borderTop: "1px solid var(--border)", backgroundColor: "var(--background)", padding: "24px", textAlign: "center" }}>
-        <div style={{ maxWidth: 640, margin: "0 auto", display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
-          <Link to="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none" }}>
-            <span style={{ width: 30, height: 30, borderRadius: 8, overflow: "hidden", display: "grid", placeItems: "center" }}>
-              <img src="https://i.ibb.co/bMmCYpfm/logo.jpg" alt="Doearno" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-            </span>
-            <span style={{ fontFamily: "var(--font-serif)", color: "var(--foreground)" }}>Doearno</span>
-          </Link>
-          <p style={{ fontSize: 12, color: "var(--muted-foreground)", margin: 0 }}>© 2026 Doearno · business@doearno.in</p>
-        </div>
+      <footer style={{ backgroundColor: "#ffffff", borderTop: "1px solid #e5e7eb", padding: "20px 24px", textAlign: "center" }}>
+        <p style={{ margin: 0, fontSize: 12, color: "#9ca3af" }}>© 2026 Doearno · business@doearno.in · Made in India 🇮🇳</p>
       </footer>
     </div>
   );
