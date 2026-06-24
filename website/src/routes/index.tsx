@@ -481,9 +481,9 @@ function Footer() {
           <span className="font-serif text-2xl">Doearno</span>
         </div>
         <div className="flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm">
-          <Link to="/delete-account" className="text-muted-foreground hover:text-primary transition-colors">
+          <a href="/delete-account.html" className="text-muted-foreground hover:text-primary transition-colors">
             Delete Account Request
-          </Link>
+          </a>
           <a href="mailto:business@doearno.in" className="text-muted-foreground hover:text-primary transition-colors">
             Contact
           </a>
