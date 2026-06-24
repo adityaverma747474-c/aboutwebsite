@@ -320,7 +320,7 @@
 
   <!-- Main -->
   <main>
-    <a href="/" class="back-link">← Home par wapas jaayein</a>
+    <a href="/" class="back-link">← Go back to Home</a>
 
     <!-- Form Card -->
     <div class="card" id="form-card">
@@ -332,7 +332,7 @@
         </div>
         <div>
           <h1>Account Delete Request</h1>
-          <p>Apne Doearno account ko permanently delete karein</p>
+          <p>Permanently delete your Doearno account and associated data</p>
         </div>
       </div>
 
@@ -341,56 +341,56 @@
           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
           <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
         </svg>
-        <span><strong>Dhyan dein:</strong> Yeh action permanent hai. Aapke saare coins, XP, referral history aur pending withdrawals hamesha ke liye delete ho jayenge.</span>
+        <span><strong>Important:</strong> This action is irreversible. All your earned coins, XP, referral history, and pending withdrawals will be permanently deleted.</span>
       </div>
 
       <form id="delete-form" novalidate>
 
         <div class="form-group">
-          <label for="del-name">Poora Naam *</label>
-          <input type="text" id="del-name" name="fullname" autocomplete="name" placeholder="Apna registered naam likhein" />
+          <label for="del-name">Full Name *</label>
+          <input type="text" id="del-name" name="fullname" autocomplete="name" placeholder="Enter your registered name" />
         </div>
 
         <div class="form-row">
           <div>
             <label for="del-phone">Phone Number</label>
-            <input type="tel" id="del-phone" name="phone" autocomplete="tel" placeholder="+91 9876543210" />
+            <input type="tel" id="del-phone" name="phone" autocomplete="tel" placeholder="e.g. 9876543210" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);" />
           </div>
           <div>
             <label for="del-email">Email Address</label>
-            <input type="email" id="del-email" name="email" autocomplete="email" placeholder="naam@example.com" />
+            <input type="email" id="del-email" name="email" autocomplete="email" placeholder="name@example.com" />
           </div>
         </div>
 
         <div class="form-group">
-          <label for="del-reason">Delete karne ki wajah *</label>
+          <label for="del-reason">Reason for Deletion *</label>
           <select id="del-reason" name="reason">
-            <option value="">Wajah chunein...</option>
-            <option value="App ab use nahi karta">App ab use nahi karta</option>
-            <option value="Privacy ya data security concerns">Privacy ya data security concerns</option>
-            <option value="Bahut zyada technical issues">Bahut zyada technical issues</option>
-            <option value="Earning rates kam hain">Earning rates kam hain</option>
-            <option value="Duplicate account banaya tha">Duplicate account banaya tha</option>
-            <option value="Kuch aur">Kuch aur (neeche likhein)</option>
+            <option value="">Select a reason...</option>
+            <option value="No longer using the application">No longer using the application</option>
+            <option value="Privacy or data security concerns">Privacy or data security concerns</option>
+            <option value="Too many technical issues">Too many technical issues</option>
+            <option value="Low earning rates">Low earning rates</option>
+            <option value="Created a duplicate account">Created a duplicate account</option>
+            <option value="Other">Other (please specify below)</option>
           </select>
         </div>
 
         <div class="form-group">
           <label for="del-comments">Additional Comments (Optional)</label>
-          <textarea id="del-comments" name="comments" rows="3" placeholder="Hume kaise better kar sakte hain..."></textarea>
+          <textarea id="del-comments" name="comments" rows="3" placeholder="Tell us how we can improve..."></textarea>
         </div>
 
         <div class="checkbox-wrap">
           <input type="checkbox" id="del-confirm" />
           <label for="del-confirm">
-            Main confirm karta/karti hoon ki mera account permanently delete ho jayega aur saare coins, XP, aur referral history <strong>wapas nahi ayenge</strong>. *
+            I confirm that I want to permanently delete my account. I understand that all my coins, XP, and referral history <strong>will be permanently erased</strong>. *
           </label>
         </div>
 
         <button type="submit" class="submit-btn" id="submit-btn">
-          Account Delete Request Submit Karein
+          Submit Account Deletion Request
         </button>
-        <p class="hint">Submit karne par aapka email app khulega — email send karna na bhulein</p>
+        <p class="hint">Submitting will open your email app &mdash; please ensure you send the email</p>
 
       </form>
     </div>
@@ -402,17 +402,17 @@
           <polyline points="20 6 9 17 4 12"/>
         </svg>
       </div>
-      <h1>Request Send Ho Gayi!</h1>
-      <p>Aapka email app open ho gaya hoga. Agar nahi hua, neeche button se manually bhejein <strong>business@doearno.in</strong> par.</p>
+      <h1>Request Generated!</h1>
+      <p>Your email app should have opened. If not, please manually email your request to <strong>business@doearno.in</strong>.</p>
 
       <div class="summary-box" id="summary-box">
         <div class="summary-title">Request Summary</div>
         <div id="summary-content"></div>
       </div>
 
-      <a href="#" class="email-btn" id="email-again-btn">📧 Email Dobara Bhejein</a>
-      <a href="/" class="home-btn">Home par Wapas Jaayein</a>
-      <p style="font-size:12px;color:#9ca3af;margin-top:14px">Aapki request 7 working days ke andar process ki jayegi.</p>
+      <a href="#" class="email-btn" id="email-again-btn">📧 Send Email Again</a>
+      <a href="/" class="home-btn">Go Back to Home</a>
+      <p style="font-size:12px;color:#9ca3af;margin-top:14px">Your request will be processed within 7 working days.</p>
     </div>
   </main>
 
@@ -439,13 +439,14 @@
       var comments = document.getElementById('del-comments').value.trim();
       var confirmed = document.getElementById('del-confirm').checked;
 
-      if (!name) { alert('Apna poora naam likhein'); return; }
-      if (!phone && !email) { alert('Phone number ya Email mein se ek zaroori hai'); return; }
-      if (!reason) { alert('Delete karne ki wajah chunein'); return; }
-      if (!confirmed) { alert('Confirmation checkbox par tick karein'); return; }
+      if (!name) { alert('Please enter your full name'); return; }
+      if (!phone && !email) { alert('Please provide your phone number or email address'); return; }
+      if (phone && phone.length < 10) { alert('Please enter a valid 10-digit phone number'); return; }
+      if (!reason) { alert('Please select a reason for deletion'); return; }
+      if (!confirmed) { alert('Please check the confirmation box to proceed'); return; }
 
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Bhej rahe hain...';
+      submitBtn.textContent = 'Generating request...';
 
       var subject = encodeURIComponent('Doearno - Account Deletion Request');
       var body = encodeURIComponent(
@@ -468,10 +469,10 @@
 
       // Build summary
       var html = '';
-      html += '<div><strong>Naam:</strong> ' + name + '</div>';
+      html += '<div><strong>Name:</strong> ' + name + '</div>';
       if (phone) html += '<div><strong>Phone:</strong> ' + phone + '</div>';
       if (email) html += '<div><strong>Email:</strong> ' + email + '</div>';
-      html += '<div><strong>Wajah:</strong> ' + reason + '</div>';
+      html += '<div><strong>Reason:</strong> ' + reason + '</div>';
       summaryContent.innerHTML = html;
 
       // Show success
