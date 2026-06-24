@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Delete Account Request — Doearno</title>
+  <meta name="description" content="Request permanent deletion of your Doearno account." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f3f4f6;
+      color: #111827;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    header {
+      background: #fff;
+      border-bottom: 1px solid #e5e7eb;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: #111827;
+    }
+    .logo img {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+    .logo span {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+    .cta-btn {
+      background: #059669;
+      color: #fff;
+      border-radius: 999px;
+      padding: 8px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    /* Main */
+    main {
+      flex: 1;
+      max-width: 620px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 28px 16px;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      color: #6b7280;
+      text-decoration: none;
+      margin-bottom: 20px;
+    }
+    .back-link:hover { color: #059669; }
+
+    .card {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 28px 22px;
+      box-shadow: 0 1px 8px rgba(0,0,0,0.05);
+    }
+
+    .card-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .card-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: #fee2e2;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+    .card-title h1 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #111827;
+    }
+    .card-title p {
+      font-size: 13px;
+      color: #6b7280;
+      margin-top: 3px;
+    }
+
+    .warning-box {
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 22px;
+      font-size: 13px;
+      color: #92400e;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 6px;
+    }
+
+    input[type="text"],
+    input[type="tel"],
+    input[type="email"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      background: #fff;
+      color: #111827;
+      font-size: 16px;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      -webkit-user-select: text;
+      user-select: text;
+      touch-action: manipulation;
+      transition: border-color 0.15s;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: #059669;
+      box-shadow: 0 0 0 3px rgba(5,150,105,0.1);
+    }
+    textarea { resize: none; }
+
+    .form-group { margin-bottom: 16px; }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .checkbox-wrap {
+      background: #f3f4f6;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .checkbox-wrap input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      flex-shrink: 0;
+      accent-color: #059669;
+      cursor: pointer;
+    }
+    .checkbox-wrap label {
+      font-size: 13px;
+      color: #374151;
+      line-height: 1.6;
+      cursor: pointer;
+      margin: 0;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: 999px;
+      background: #dc2626;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: background 0.2s;
+    }
+    .submit-btn:hover { background: #b91c1c; }
+    .submit-btn:disabled { background: #d1d5db; cursor: not-allowed; }
+
+    .hint {
+      text-align: center;
+      font-size: 12px;
+      color: #9ca3af;
+      margin-top: 10px;
+    }
+
+    /* Success */
+    .success-card {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 36px 22px;
+      text-align: center;
+      box-shadow: 0 1px 8px rgba(0,0,0,0.05);
+      display: none;
+    }
+    .success-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: #dcfce7;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 16px;
+    }
+    .success-card h1 { font-size: 1.6rem; font-weight: 700; margin-bottom: 10px; }
+    .success-card p { font-size: 14px; color: #6b7280; line-height: 1.7; margin-bottom: 20px; }
+    .summary-box {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 14px 16px;
+      text-align: left;
+      margin-bottom: 20px;
+      font-size: 13px;
+      color: #6b7280;
+      line-height: 2;
+    }
+    .summary-box strong { color: #374151; }
+    .summary-title {
+      font-weight: 700;
+      font-size: 13px;
+      color: #374151;
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 8px;
+      margin-bottom: 8px;
+    }
+    .email-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 13px;
+      border-radius: 999px;
+      background: #059669;
+      color: #fff;
+      font-weight: 700;
+      font-size: 14px;
+      text-decoration: none;
+      margin-bottom: 10px;
+    }
+    .home-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 13px;
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      color: #374151;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+    }
+
+    /* Footer */
+    footer {
+      background: #fff;
+      border-top: 1px solid #e5e7eb;
+      padding: 18px 24px;
+      text-align: center;
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    @media (max-width: 500px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-inner">
+      <a href="/" class="logo">
+        <img src="https://i.ibb.co/bMmCYpfm/logo.jpg" alt="Doearno Logo" />
+        <span>Doearno</span>
+      </a>
+      <a href="https://official.doearno.in" class="cta-btn">Start Earning →</a>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main>
+    <a href="/" class="back-link">← Home par wapas jaayein</a>
+
+    <!-- Form Card -->
+    <div class="card" id="form-card">
+      <div class="card-title">
+        <div class="card-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <div>
+          <h1>Account Delete Request</h1>
+          <p>Apne Doearno account ko permanently delete karein</p>
+        </div>
+      </div>
+
+      <div class="warning-box">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        <span><strong>Dhyan dein:</strong> Yeh action permanent hai. Aapke saare coins, XP, referral history aur pending withdrawals hamesha ke liye delete ho jayenge.</span>
+      </div>
+
+      <form id="delete-form" novalidate>
+
+        <div class="form-group">
+          <label for="del-name">Poora Naam *</label>
+          <input type="text" id="del-name" name="fullname" autocomplete="name" placeholder="Apna registered naam likhein" />
+        </div>
+
+        <div class="form-row">
+          <div>
+            <label for="del-phone">Phone Number</label>
+            <input type="tel" id="del-phone" name="phone" autocomplete="tel" placeholder="+91 9876543210" />
+          </div>
+          <div>
+            <label for="del-email">Email Address</label>
+            <input type="email" id="del-email" name="email" autocomplete="email" placeholder="naam@example.com" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="del-reason">Delete karne ki wajah *</label>
+          <select id="del-reason" name="reason">
+            <option value="">Wajah chunein...</option>
+            <option value="App ab use nahi karta">App ab use nahi karta</option>
+            <option value="Privacy ya data security concerns">Privacy ya data security concerns</option>
+            <option value="Bahut zyada technical issues">Bahut zyada technical issues</option>
+            <option value="Earning rates kam hain">Earning rates kam hain</option>
+            <option value="Duplicate account banaya tha">Duplicate account banaya tha</option>
+            <option value="Kuch aur">Kuch aur (neeche likhein)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="del-comments">Additional Comments (Optional)</label>
+          <textarea id="del-comments" name="comments" rows="3" placeholder="Hume kaise better kar sakte hain..."></textarea>
+        </div>
+
+        <div class="checkbox-wrap">
+          <input type="checkbox" id="del-confirm" />
+          <label for="del-confirm">
+            Main confirm karta/karti hoon ki mera account permanently delete ho jayega aur saare coins, XP, aur referral history <strong>wapas nahi ayenge</strong>. *
+          </label>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submit-btn">
+          Account Delete Request Submit Karein
+        </button>
+        <p class="hint">Submit karne par aapka email app khulega — email send karna na bhulein</p>
+
+      </form>
+    </div>
+
+    <!-- Success Card -->
+    <div class="success-card" id="success-card">
+      <div class="success-icon">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+      <h1>Request Send Ho Gayi!</h1>
+      <p>Aapka email app open ho gaya hoga. Agar nahi hua, neeche button se manually bhejein <strong>business@doearno.in</strong> par.</p>
+
+      <div class="summary-box" id="summary-box">
+        <div class="summary-title">Request Summary</div>
+        <div id="summary-content"></div>
+      </div>
+
+      <a href="#" class="email-btn" id="email-again-btn">📧 Email Dobara Bhejein</a>
+      <a href="/" class="home-btn">Home par Wapas Jaayein</a>
+      <p style="font-size:12px;color:#9ca3af;margin-top:14px">Aapki request 7 working days ke andar process ki jayegi.</p>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    © 2026 Doearno &middot; business@doearno.in &middot; Made in India 🇮🇳
+  </footer>
+
+  <script>
+    var form = document.getElementById('delete-form');
+    var formCard = document.getElementById('form-card');
+    var successCard = document.getElementById('success-card');
+    var submitBtn = document.getElementById('submit-btn');
+    var emailAgainBtn = document.getElementById('email-again-btn');
+    var summaryContent = document.getElementById('summary-content');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      var name = document.getElementById('del-name').value.trim();
+      var phone = document.getElementById('del-phone').value.trim();
+      var email = document.getElementById('del-email').value.trim();
+      var reason = document.getElementById('del-reason').value;
+      var comments = document.getElementById('del-comments').value.trim();
+      var confirmed = document.getElementById('del-confirm').checked;
+
+      if (!name) { alert('Apna poora naam likhein'); return; }
+      if (!phone && !email) { alert('Phone number ya Email mein se ek zaroori hai'); return; }
+      if (!reason) { alert('Delete karne ki wajah chunein'); return; }
+      if (!confirmed) { alert('Confirmation checkbox par tick karein'); return; }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Bhej rahe hain...';
+
+      var subject = encodeURIComponent('Doearno - Account Deletion Request');
+      var body = encodeURIComponent(
+        'Dear Doearno Support Team,\n\n' +
+        'I request permanent deletion of my Doearno account.\n\n' +
+        'Full Name: ' + name + '\n' +
+        'Phone: ' + (phone || 'Not provided') + '\n' +
+        'Email: ' + (email || 'Not provided') + '\n' +
+        'Reason: ' + reason + '\n' +
+        'Comments: ' + (comments || 'None') + '\n\n' +
+        'I confirm this action is permanent.\n\n' +
+        'Regards,\n' + name
+      );
+
+      var mailtoLink = 'mailto:business@doearno.in?subject=' + subject + '&body=' + body;
+      window.location.href = mailtoLink;
+
+      // Build email-again link
+      emailAgainBtn.href = mailtoLink;
+
+      // Build summary
+      var html = '';
+      html += '<div><strong>Naam:</strong> ' + name + '</div>';
+      if (phone) html += '<div><strong>Phone:</strong> ' + phone + '</div>';
+      if (email) html += '<div><strong>Email:</strong> ' + email + '</div>';
+      html += '<div><strong>Wajah:</strong> ' + reason + '</div>';
+      summaryContent.innerHTML = html;
+
+      // Show success
+      setTimeout(function() {
+        formCard.style.display = 'none';
+        successCard.style.display = 'block';
+      }, 800);
+    });
+  </script>
+</body>
+</html>
