@@ -376,8 +376,8 @@
         </div>
 
         <div class="form-group">
-          <label for="del-comments">Additional Comments (Optional)</label>
-          <textarea id="del-comments" name="comments" rows="3" placeholder="Tell us how we can improve..."></textarea>
+          <label for="del-comments">Additional Comments (Required if "Other" is selected)</label>
+          <textarea id="del-comments" name="comments" rows="3" placeholder="Tell us how we can improve... (max 300 characters)" maxlength="300"></textarea>
         </div>
 
         <div class="checkbox-wrap">
@@ -443,6 +443,10 @@
       if (!phone && !email) { alert('Please provide your phone number or email address'); return; }
       if (phone && phone.length < 10) { alert('Please enter a valid 10-digit phone number'); return; }
       if (!reason) { alert('Please select a reason for deletion'); return; }
+      if (reason === 'Other' && comments.length < 15) { 
+        alert('Since you selected "Other", please specify your reason in the comments (at least 15 characters).'); 
+        return; 
+      }
       if (!confirmed) { alert('Please check the confirmation box to proceed'); return; }
 
       submitBtn.disabled = true;
