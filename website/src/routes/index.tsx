@@ -444,6 +444,63 @@ function Blog() {
   );
 }
 
+function FaqSection() {
+  const faqs = [
+    {
+      q: "How do I start earning without any investment?",
+      a: "Doearno is 100% free to use. Simply complete easy tasks, play fun games, and fill out surveys to earn coins. You can convert these coins instantly into real cash. No hidden fees or investments required!"
+    },
+    {
+      q: "How long does UPI withdrawal take?",
+      a: "We know your time is valuable! That's why Doearno features Instant UPI Withdrawals. Once you hit withdraw, your money is transferred to your bank account ranging from a few seconds to a maximum of 24 hours."
+    },
+    {
+      q: "Is my data and account safe?",
+      a: "Yes, absolutely! We prioritize your privacy and security. Your data is stored in an encrypted format on 100% secure servers. We follow strict data protection guidelines so you can earn with complete peace of mind."
+    },
+    {
+      q: "Can I earn by referring my friends?",
+      a: "Yes! We have a highly rewarding Referral Program. When you invite friends using your unique link, you get a lifetime commission (coins) whenever they sign up and complete tasks. The more friends you invite, the more you earn!"
+    }
+  ];
+
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
+
+  return (
+    <section id="faq" className="bg-transparent py-24 relative overflow-hidden">
+      <div className="mx-auto max-w-4xl px-6 relative z-10">
+        <div className="text-center mb-16">
+          <p className="eyebrow">· FAQ ·</p>
+          <h2 className="display mt-4 text-5xl md:text-6xl">Got questions? <em className="text-primary">We got answers.</em></h2>
+        </div>
+        <div className="flex flex-col gap-4">
+          {faqs.map((faq, index) => (
+            <div 
+              key={index} 
+              className={`rounded-3xl glass transition-all duration-300 ${openIndex === index ? 'shadow-[var(--shadow-glow)] border-primary/50' : 'hover:border-primary/30'}`}
+            >
+              <button 
+                onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                className="w-full text-left px-8 py-6 flex justify-between items-center gap-4"
+              >
+                <h3 className="font-serif text-xl md:text-2xl leading-tight text-foreground">{faq.q}</h3>
+                <span className={`text-3xl text-primary transition-transform duration-300 ${openIndex === index ? 'rotate-45' : ''}`}>+</span>
+              </button>
+              <div 
+                className={`overflow-hidden transition-all duration-300 ${openIndex === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
+              >
+                <p className="px-8 pb-8 text-lg text-muted-foreground leading-relaxed">
+                  {faq.a}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function FinalCta() {
   return (
     <section id="download" className="relative py-28 overflow-hidden" style={{ background: "var(--gradient-emerald)" }}>
@@ -510,6 +567,7 @@ export default function Index() {
         <Tribes />
         <Stories />
         <Blog />
+        <FaqSection />
         <FinalCta />
       </main>
       <Footer />
