@@ -95,7 +95,7 @@ function Hero() {
     <section className="relative overflow-hidden" style={{ background: "var(--gradient-hero)" }}>
       <div className="bg-primary-soft/40 text-foreground text-center py-2 text-xs border-b border-primary/20 backdrop-blur-md">
         <span className="eyebrow text-primary mr-3">🚀 NOW LAUNCHING</span>
-        Be among the first to experience Doearno · Beta open
+        Be among the first to experience Doearno
       </div>
       <div className="mx-auto grid max-w-7xl gap-12 px-6 py-20 lg:grid-cols-2 lg:py-28 relative z-10">
         <div className="flex flex-col justify-center">
