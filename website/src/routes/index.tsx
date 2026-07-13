@@ -402,7 +402,7 @@ function Stories() {
         </div>
         <div className="mt-10">
           <a href="https://play.google.com/store/apps/details?id=com.doearno.app" onClick={(e) => { const r = (e.target as HTMLElement).getBoundingClientRect(); triggerConfetti(r.left + r.width/2, r.top); triggerCoinRain(); }} className="btn-3d glow-pulse inline-flex items-center gap-3 rounded-full bg-primary px-7 py-4 text-primary-foreground font-semibold hover:bg-primary-deep transition-colors">
-            Join the beta 🚀
+            Join the journey now 🚀
           </a>
         </div>
       </div>
