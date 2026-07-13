@@ -77,7 +77,7 @@ function Header() {
           <a href="#tribes" className="text-muted-foreground hover:text-primary transition-colors">Tribes</a>
           <a href="#stories" className="text-muted-foreground hover:text-primary transition-colors">Stories</a>
         </nav>
-        <a href="https://official.doearno.in" className="btn-3d rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary-deep transition-colors">
+        <a href="https://play.google.com/store/apps/details?id=com.doearno.app" className="btn-3d rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary-deep transition-colors">
           Start Earning →
         </a>
       </div>
@@ -111,7 +111,7 @@ function Hero() {
             level up, earn coins & XP, withdraw real money to UPI.
           </p>
           <div className="mt-10 flex flex-wrap items-center gap-4">
-            <a href="https://official.doearno.in" onClick={handleCta} className="btn-3d glow-pulse group inline-flex items-center gap-3 rounded-full bg-primary px-7 py-4 text-primary-foreground font-semibold shadow-[var(--shadow-glow)] hover:bg-primary-deep transition-all">
+            <a href="https://play.google.com/store/apps/details?id=com.doearno.app" onClick={handleCta} className="btn-3d glow-pulse group inline-flex items-center gap-3 rounded-full bg-primary px-7 py-4 text-primary-foreground font-semibold shadow-[var(--shadow-glow)] hover:bg-primary-deep transition-all">
               Start Earning Now 🚀
               <span className="grid h-7 w-7 place-items-center rounded-full bg-foreground/15 group-hover:translate-x-1 transition-transform">→</span>
             </a>
@@ -375,7 +375,7 @@ function Tribes() {
               <li>Earn coins as friends complete tasks</li>
             </ol>
           </div>
-          <a href="https://official.doearno.in" className="btn-3d mt-6 block text-center rounded-full bg-primary py-3 text-primary-foreground font-semibold hover:bg-primary-deep transition-colors">
+          <a href="https://play.google.com/store/apps/details?id=com.doearno.app" className="btn-3d mt-6 block text-center rounded-full bg-primary py-3 text-primary-foreground font-semibold hover:bg-primary-deep transition-colors">
             Get the app
           </a>
         </div>
@@ -401,7 +401,7 @@ function Stories() {
           <span className="text-sm">Be one of the first stories — start earning today</span>
         </div>
         <div className="mt-10">
-          <a href="https://official.doearno.in" onClick={(e) => { const r = (e.target as HTMLElement).getBoundingClientRect(); triggerConfetti(r.left + r.width/2, r.top); triggerCoinRain(); }} className="btn-3d glow-pulse inline-flex items-center gap-3 rounded-full bg-primary px-7 py-4 text-primary-foreground font-semibold hover:bg-primary-deep transition-colors">
+          <a href="https://play.google.com/store/apps/details?id=com.doearno.app" onClick={(e) => { const r = (e.target as HTMLElement).getBoundingClientRect(); triggerConfetti(r.left + r.width/2, r.top); triggerCoinRain(); }} className="btn-3d glow-pulse inline-flex items-center gap-3 rounded-full bg-primary px-7 py-4 text-primary-foreground font-semibold hover:bg-primary-deep transition-colors">
             Join the beta 🚀
           </a>
         </div>
@@ -458,7 +458,7 @@ function FinalCta() {
           Free forever. Zero fees. Real tasks. Real coins. Instant UPI.
         </p>
         <div className="mt-10 flex flex-wrap justify-center gap-4">
-          <a href="https://official.doearno.in" onClick={(e) => { const r = (e.target as HTMLElement).getBoundingClientRect(); triggerConfetti(r.left + r.width/2, r.top); triggerCoinRain(); }} className="btn-3d rounded-full bg-foreground text-background px-7 py-4 font-semibold hover:bg-background hover:text-foreground transition-colors">
+          <a href="https://play.google.com/store/apps/details?id=com.doearno.app" onClick={(e) => { const r = (e.target as HTMLElement).getBoundingClientRect(); triggerConfetti(r.left + r.width/2, r.top); triggerCoinRain(); }} className="btn-3d rounded-full bg-foreground text-background px-7 py-4 font-semibold hover:bg-background hover:text-foreground transition-colors">
             Start Earning Now 🚀
           </a>
           <a href="mailto:business@doearno.in" className="rounded-full border border-foreground/30 px-7 py-4 font-semibold hover:bg-foreground/10 transition-colors">
